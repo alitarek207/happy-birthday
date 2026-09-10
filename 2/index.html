@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>💝 Happy Birthday Yumy!</title>
+  
+  <!-- Fonts: Playfair Display & Poppins & Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="has-nav">
+
+  <!-- Background Starfield & Ambient Glow -->
+  <canvas id="starfield-canvas"></canvas>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Floating Hearts & Balloons Containers -->
+  <div class="hearts-container" id="heartsContainer"></div>
+  <div class="balloons-container" id="balloonsContainer"></div>
+
+  <!-- =================================================================
+       STAGE 1: PASSWORD GATE
+       ================================================================= -->
+  <div id="gate-screen">
+    <div class="gate-card">
+      <div class="gate-icon">🔮</div>
+      <h1 class="gate-title">A Surprise Awaits</h1>
+      <p class="gate-subtitle">What's the magic number? 🔒</p>
+
+      <form id="gate-form" onsubmit="return false;">
+        <div class="input-wrapper">
+          <input 
+            type="password" 
+            id="password-input" 
+            class="gate-input" 
+            placeholder="• • • • • • •" 
+            autocomplete="off" 
+            inputmode="numeric"
+            maxlength="10"
+            autofocus
+            required
+          >
+        </div>
+
+        <div id="gate-error-msg" class="gate-error">Try again, love 💕</div>
+
+        <button type="button" id="unlock-btn" class="btn-gold" style="width: 100%;">
+          Unlock 💝
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =================================================================
+       STAGE 2: COUNTDOWN SCREEN
+       ================================================================= -->
+  <div id="countdown-screen">
+    <h1 class="countdown-name">Yumy</h1>
+    <p class="countdown-subtitle">Your special day is coming ✨</p>
+
+    <div class="countdown-grid">
+      <div class="countdown-item glass-card">
+        <div class="countdown-number" id="cdDays">00</div>
+        <div class="countdown-label">Days</div>
+      </div>
+      <div class="countdown-item glass-card">
+        <div class="countdown-number" id="cdHours">00</div>
+        <div class="countdown-label">Hours</div>
+      </div>
+      <div class="countdown-item glass-card">
+        <div class="countdown-number" id="cdMinutes">00</div>
+        <div class="countdown-label">Minutes</div>
+      </div>
+      <div class="countdown-item glass-card">
+        <div class="countdown-number" id="cdSeconds">00</div>
+        <div class="countdown-label">Seconds</div>
+      </div>
+    </div>
+
+    <div id="countdownAction">
+      <button type="button" id="start-stories-btn" class="btn-gold" style="padding: 14px 36px; font-size: 1.1rem;">
+        ✨ Open Your Surprise 🎁
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =================================================================
+       STAGE 3: SNAPCHAT-STYLE STORIES (4 Slides)
+       ================================================================= -->
+  <div id="stories-screen">
+    <div class="story-container">
+      
+      <!-- Top Progress Bars -->
+      <div class="story-progress-bar" id="storiesProgress">
+        <div class="progress-segment" id="prog-0"><div class="progress-fill"></div></div>
+        <div class="progress-segment" id="prog-1"><div class="progress-fill"></div></div>
+        <div class="progress-segment" id="prog-2"><div class="progress-fill"></div></div>
+        <div class="progress-segment" id="prog-3"><div class="progress-fill"></div></div>
+      </div>
+
+      <!-- Close / Skip Button -->
+      <button type="button" class="story-close-btn" id="storyCloseBtn" title="Skip to Main">✕</button>
+
+      <!-- Navigation Tap Zones -->
+      <div class="story-nav-zone story-nav-left" id="story-prev-tap" title="Previous Story"></div>
+      <div class="story-nav-zone story-nav-right" id="story-next-tap" title="Next Story"></div>
+
+      <!-- Slides Wrapper -->
+      <div class="story-slides-wrapper" id="storySlidesWrapper">
+
+        <!-- Story 1 -->
+        <div class="story-slide active" data-index="0">
+          <div class="story-media-layer">
+            <img src="../ph/story1.jpg.jpeg" alt="Story 1">
+          </div>
+          <div class="story-gradient"></div>
+          <div class="story-content">
+            <h2 class="story-title">From the <span class="highlight">very first day</span> 🌙</h2>
+            <p class="story-text">You changed everything for me ✨</p>
+          </div>
+        </div>
+
+        <!-- Story 2 -->
+        <div class="story-slide" data-index="1">
+          <div class="story-media-layer">
+            <video src="../ph/story2.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+          </div>
+          <div class="story-gradient"></div>
+          <div class="story-content">
+            <h2 class="story-title">You became my <span class="highlight">favorite person</span> 💫</h2>
+            <p class="story-text">Every day with you feels different, better 💕</p>
+          </div>
+        </div>
+
+        <!-- Story 3 -->
+        <div class="story-slide" data-index="2">
+          <div class="story-media-layer">
+            <video src="../ph/story3.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+          </div>
+          <div class="story-gradient"></div>
+          <div class="story-content">
+            <h2 class="story-title">Every moment with you <span class="highlight">matters</span> ✨</h2>
+            <p class="story-text">And I keep every single one close to my heart 💛</p>
+          </div>
+        </div>
+
+        <!-- Story 4 -->
+        <div class="story-slide" data-index="3">
+          <div class="story-media-layer">
+            <img src="../ph/story4.jpg.jpeg" alt="Story 4">
+          </div>
+          <div class="story-gradient"></div>
+          <div class="story-content">
+            <h2 class="story-title">Today is <span class="highlight">all about you</span> 🎂</h2>
+            <p class="story-text">Happy Birthday to the best thing in my life ❤️</p>
+            <button type="button" id="proceed-to-scroll-btn" class="btn-gold" style="margin-top: 10px;">
+              Let's explore our journey ✨
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =================================================================
+       STAGE 4: MAIN SCROLL CELEBRATION JOURNEY
+       ================================================================= -->
+  <main id="scrollPage">
+
+    <!-- ── 1. HERO LOVE LETTER ── -->
+    <section class="hero-section" id="letter">
+      <div class="container">
+        <div class="reveal">
+          <div class="hero-emoji">💝</div>
+          <div class="hero-badge">🎂 Happy 17th Birthday!</div>
+          <h1 class="hero-name">Yumy</h1>
+          <h2 class="hero-title">Every year, my heart <span class="highlight">chooses you</span> again ❤️</h2>
+          <div class="hero-letter">
+            <p>
+              On this beautiful day, I want you to know that you are the most
+              incredible person I've ever known. Every smile of yours lights up
+              my entire world, and every moment we share becomes my favorite memory.
+            </p>
+            <p>
+              You deserve all the happiness in the universe, and I promise to
+              always be here to make you smile. Today and every day, I celebrate
+              the amazing person you are. 💕
+            </p>
+          </div>
+          <a href="#memories" class="scroll-indicator">
+            <span>Our Memories ⬇️</span>
+            <div>↓</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. MEMORIES CONSTELLATION TIMELINE ── -->
+    <section class="section" id="memories">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <div class="section-tag">✨ Our Story</div>
+          <h2 class="section-title">Memories We Made 💛</h2>
+          <div class="divider"></div>
+        </div>
+
+        <div class="memories-container">
+          <div class="constellation-line"></div>
+
+          <!-- Memory 1 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">First time we met 🌸</h3>
+                <span class="memory-date">27/1/2026</span>
+              </div>
+              <p class="memory-text">ana aaref enha msh awl mara bs ana baatbrha awl mara w lesa w ba'ol elhmdullah enha haslt ashan faaln nkon maa baad</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory1.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory1.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 2 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">Mall 1 🛍️</h3>
+                <span class="memory-date">12/2/2026</span>
+              </div>
+              <p class="memory-text">awl mara fe mall 1 w awl mara lena lwhdna lhd dlwate faker ezay elyoum da</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory2.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory2.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 3 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">First day ❤️</h3>
+                <span class="memory-date">21/2/2026</span>
+              </div>
+              <p class="memory-text">da bnsbale awl youm ehna ba'ena maa baad khlas w kont mota'ked ad eh ana habetk</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory3.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory3.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 4 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">Cloud 9 ❄️</h3>
+                <span class="memory-date">23/2/2026</span>
+              </div>
+              <p class="memory-text">da mn aktr elayam ely bhbha awy wkman wa't elsheta w kol haga</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory4.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory4.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 5 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">Mivida 🌿</h3>
+                <span class="memory-date">5/6/2026</span>
+              </div>
+              <p class="memory-text">bardo mn ahla elayam bamout fe</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory5.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory5.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 6 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">Fan Zone ⚽</h3>
+                <span class="memory-date">7/7/2026</span>
+              </div>
+              <p class="memory-text">masr msh btfrah</p>
+              <div class="media-slot" onclick="openLightbox('video', '../ph/memory6.mp4.mp4')">
+                <span class="video-badge">▶ Video</span>
+                <video src="../ph/memory6.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Memory 7 -->
+          <div class="memory-item reveal">
+            <div class="constellation-node"></div>
+            <div class="memory-card">
+              <div class="memory-header">
+                <h3 class="memory-title">My Birthday 🎉</h3>
+                <span class="memory-date">17/8/2026</span>
+              </div>
+              <p class="memory-text">3ed mlade baadha b 20 youm ah bs etbst awy shoran awy aala elmofg'a de w elyoum da</p>
+              <div class="media-slot" onclick="openLightbox('image', '../ph/memory7.jpg.jpeg')">
+                <img src="../ph/memory7.jpg.jpeg" alt="My Birthday">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. PHOTO & VIDEO GALLERY ── -->
+    <section class="section" id="photos">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <div class="section-tag">📸 Captured Moments</div>
+          <h2 class="section-title">Our Moments & Memories</h2>
+          <div class="divider"></div>
+        </div>
+
+        <!-- Filter & View Controls -->
+        <div class="gallery-toggle reveal">
+          <button type="button" class="filter-btn active" onclick="filterGallery('all', this)">All (38)</button>
+          <button type="button" class="filter-btn" onclick="filterGallery('photo', this)">📸 Photos (17)</button>
+          <button type="button" class="filter-btn" onclick="filterGallery('video', this)">🎬 Videos (21)</button>
+        </div>
+
+        <div class="gallery-toggle reveal" style="margin-top: -12px;">
+          <button type="button" class="gallery-toggle__btn active" data-view="grid">Grid</button>
+          <button type="button" class="gallery-toggle__btn" data-view="slider">Slider</button>
+          <button type="button" class="gallery-toggle__btn" data-view="masonry">Masonry</button>
+        </div>
+
+        <!-- Grid View -->
+        <div class="gallery-view gallery-grid active" id="galleryGrid">
+          
+          <!-- PHOTOS -->
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery1.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery1.jpg.jpeg" alt="Photo 1" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery2.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery2.jpg.jpeg" alt="Photo 2" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery3.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery3.jpg.jpeg" alt="Photo 3" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery4.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery4.jpg.jpeg" alt="Photo 4" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery5.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery5.jpg.jpeg" alt="Photo 5" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/gallery9.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/gallery9.jpg.jpeg" alt="Photo 6" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/story1.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/story1.jpg.jpeg" alt="Story Photo 1" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/story4.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/story4.jpg.jpeg" alt="Story Photo 4" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/memory7.jpg.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/memory7.jpg.jpeg" alt="Memory Photo 7" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%207.19.51%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%207.19.51%20AM.jpeg" alt="WhatsApp Photo 1" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%207.20.00%20AM%20(2).jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%207.20.00%20AM%20(2).jpeg" alt="WhatsApp Photo 2" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%207.20.01%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%207.20.01%20AM.jpeg" alt="WhatsApp Photo 3" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%207.20.11%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%207.20.11%20AM.jpeg" alt="WhatsApp Photo 4" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%208.15.56%20AM%20(1).jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%208.15.56%20AM%20(1).jpeg" alt="WhatsApp Photo 5" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%208.15.56%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%208.15.56%20AM.jpeg" alt="WhatsApp Photo 6" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%208.16.22%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%208.16.22%20AM.jpeg" alt="WhatsApp Photo 7" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="photo" onclick="openLightbox('image', '../ph/WhatsApp%20Image%202026-08-29%20at%208.17.23%20AM.jpeg')">
+            <div class="gallery-media-wrapper">
+              <img src="../ph/WhatsApp%20Image%202026-08-29%20at%208.17.23%20AM.jpeg" alt="WhatsApp Photo 8" loading="lazy">
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">🔍 View</span></div>
+            </div>
+          </div>
+
+          <!-- VIDEOS -->
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/gallery6.mp4.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/gallery6.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/gallery7.mp4.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/gallery7.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/gallery8.mp4.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/gallery8.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/story2.mp4.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/story2.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/story3.mp4.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/story3.mp4.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.44%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.44%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.45%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.45%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.47%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.47%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.50%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.50%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.51%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.51%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.54%20AM%20(1).mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.54%20AM%20(1).mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.57%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.57%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.19.59%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.19.59%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%207.20.07%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%207.20.07%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+          <div class="gallery-card reveal" data-type="video" onclick="openLightbox('video', '../ph/WhatsApp%20Video%202026-08-29%20at%208.17.08%20AM.mp4')">
+            <div class="gallery-media-wrapper">
+              <div class="video-center-play">▶</div>
+              <video src="../ph/WhatsApp%20Video%202026-08-29%20at%208.17.08%20AM.mp4#t=0.001" playsinline muted loop preload="metadata"></video>
+              <div class="gallery-card-overlay"><span class="gallery-view-hint">▶ Play</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Slider View -->
+        <div class="gallery-view gallery-slider" id="gallerySlider">
+          <div class="gallery-slider__track" id="sliderTrack">
+            <div class="gallery-slider__slide"><img src="../ph/gallery1.jpg.jpeg" alt="Slide 1"></div>
+            <div class="gallery-slider__slide"><img src="../ph/gallery2.jpg.jpeg" alt="Slide 2"></div>
+            <div class="gallery-slider__slide"><img src="../ph/gallery3.jpg.jpeg" alt="Slide 3"></div>
+            <div class="gallery-slider__slide"><img src="../ph/gallery4.jpg.jpeg" alt="Slide 4"></div>
+            <div class="gallery-slider__slide"><img src="../ph/gallery5.jpg.jpeg" alt="Slide 5"></div>
+            <div class="gallery-slider__slide"><img src="../ph/gallery9.jpg.jpeg" alt="Slide 6"></div>
+          </div>
+          <button class="gallery-slider__arrow gallery-slider__arrow--prev" id="sliderPrev">‹</button>
+          <button class="gallery-slider__arrow gallery-slider__arrow--next" id="sliderNext">›</button>
+        </div>
+
+        <!-- Masonry View -->
+        <div class="gallery-view gallery-masonry" id="galleryMasonry">
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery1.jpg.jpeg')"><img src="../ph/gallery1.jpg.jpeg" alt="Photo 1"></div>
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery2.jpg.jpeg')"><img src="../ph/gallery2.jpg.jpeg" alt="Photo 2"></div>
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery3.jpg.jpeg')"><img src="../ph/gallery3.jpg.jpeg" alt="Photo 3"></div>
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery4.jpg.jpeg')"><img src="../ph/gallery4.jpg.jpeg" alt="Photo 4"></div>
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery5.jpg.jpeg')"><img src="../ph/gallery5.jpg.jpeg" alt="Photo 5"></div>
+          <div class="gallery-masonry__item" onclick="openLightbox('image', '../ph/gallery9.jpg.jpeg')"><img src="../ph/gallery9.jpg.jpeg" alt="Photo 6"></div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ── 4. LOVE NOTES (3D FLIP CARDS) ── -->
+    <section class="section" id="notes">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <div class="section-tag">💌 From My Heart</div>
+          <h2 class="section-title">Love Notes</h2>
+          <div class="divider"></div>
+          <p style="color: var(--muted); margin-top: 8px;">Tap each card to flip ✨</p>
+        </div>
+
+        <div class="notes-grid">
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">💌</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">You are the reason I believe in magic. Every day with you feels like a dream I never want to wake up from.</p>
+                <div class="flip-card__back-emoji">✨</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">💕</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">I love how you make even the simplest moments feel extraordinary. You are pure sunshine.</p>
+                <div class="flip-card__back-emoji">☀️</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">🌸</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">Your laughter is my favorite sound in the entire world. Never stop laughing, my love.</p>
+                <div class="flip-card__back-emoji">🎵</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">🦋</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">When I look at you, I see my today, my tomorrow, and my forever. You are everything to me.</p>
+                <div class="flip-card__back-emoji">💖</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">🌹</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">I promise to always be your safe place, your biggest fan, and your best friend. Always and forever.</p>
+                <div class="flip-card__back-emoji">🤝</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card reveal" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card__inner">
+              <div class="flip-card__front">
+                <div class="flip-card__front-emoji">⭐</div>
+                <p class="flip-card__front-text">Tap to read</p>
+              </div>
+              <div class="flip-card__back">
+                <p class="flip-card__back-text">Happy Birthday to the person who makes my heart race and my soul peaceful at the same time. 🎂💕</p>
+                <div class="flip-card__back-emoji">🎉</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── 5. REASONS I LOVE YOU ── -->
+    <section class="section" id="love">
+      <div class="container">
+        
+        <div class="section-header reveal">
+          <div class="section-tag">❤️ Infinite Love</div>
+          <h2 class="section-title">Reasons I Love You</h2>
+          <div class="divider"></div>
+        </div>
+
+        <div class="reasons-list">
+          <div class="reason-item reveal">
+            <div class="reason-item__number">1</div>
+            <p class="reason-item__text">Your smile. It lights up the darkest room and warms my entire heart. ☀️</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">2</div>
+            <p class="reason-item__text">The way you laugh at my silly jokes, even when they're not funny at all. 😂</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">3</div>
+            <p class="reason-item__text">Your kind heart that always sees the good in everything. 💕</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">4</div>
+            <p class="reason-item__text">How you make every moment together feel like a special adventure. 🌟</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">5</div>
+            <p class="reason-item__text">Your strength and passion — you inspire me to be better every single day. 💪</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">6</div>
+            <p class="reason-item__text">The way you care about the little details and remember what matters. 🎀</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">7</div>
+            <p class="reason-item__text">Your voice. It's the most calming and beautiful melody to me. 🎵</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">8</div>
+            <p class="reason-item__text">How safe and peaceful I feel whenever I am with you. You are my home. 🏠</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">9</div>
+            <p class="reason-item__text">Your beautiful soul that makes everyone around you feel special. 🦋</p>
+          </div>
+          <div class="reason-item reveal">
+            <div class="reason-item__number">10</div>
+            <p class="reason-item__text">Simply because you are YOU — the most wonderful person in the universe. 👑</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ── 6. CLOSING LETTER & SIGNATURE ── -->
+    <section class="section" id="closing">
+      <div class="container">
+        <div class="letter-wrapper reveal">
+          <div class="letter-card">
+            <div class="letter-icon">💌</div>
+            <h2 class="letter-title">Everything I Wanted to Say</h2>
+            <p class="letter-body">
+              kol sana wente tayba ya ahla haga hasltle w <span class="highlight">aghla haga aande</span> ente msh aarfa ana bhbk ezay awl w hahda hbtha w akher wahda <span class="highlight">rbna ykhleke lea</span> ya rouh albe ❤️
+            </p>
+            <div class="letter-signature">
+              Forever & Always Yours ♥
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <p>Made with all my heart ❤️ • Happy Birthday Yumy</p>
+      </div>
+    </footer>
+
+  </main>
+
+
+  <!-- Floating Music Toggle -->
+  <button type="button" id="music-toggle-btn" class="floating-music-btn" title="Toggle Music">
+    🎵
+  </button>
+  <audio id="bg-audio" loop preload="none">
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
+
+
+  <!-- Bottom Navbar -->
+  <nav class="bottom-nav" id="bottomNav">
+    <ul class="bottom-nav__list">
+      <li class="bottom-nav__item active" data-section="letter">
+        <span class="bottom-nav__icon">💌</span>
+        <span>Letter</span>
+      </li>
+      <li class="bottom-nav__item" data-section="memories">
+        <span class="bottom-nav__icon">📅</span>
+        <span>Memories</span>
+      </li>
+      <li class="bottom-nav__item" data-section="photos">
+        <span class="bottom-nav__icon">🖼️</span>
+        <span>Gallery</span>
+      </li>
+      <li class="bottom-nav__item" data-section="notes">
+        <span class="bottom-nav__icon">💕</span>
+        <span>Notes</span>
+      </li>
+      <li class="bottom-nav__item" data-section="love">
+        <span class="bottom-nav__icon">❤️</span>
+        <span>Love</span>
+      </li>
+    </ul>
+  </nav>
+
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" id="lightboxClose">✕</button>
+    <button class="lightbox__nav lightbox__prev" id="lightboxPrev">‹</button>
+    <div class="lightbox__content" id="lightboxContent"></div>
+    <button class="lightbox__nav lightbox__next" id="lightboxNext">›</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
