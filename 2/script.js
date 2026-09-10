@@ -412,36 +412,24 @@
     const cleanSrc = src.split('#')[0];
 
     if (type === 'video') {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'lightbox__video-wrapper';
-
       const vid = document.createElement('video');
       vid.className = 'lightbox__video';
       vid.src = cleanSrc;
       vid.controls = true;
+      vid.autoplay = true;
+      vid.muted = true;
+      vid.defaultMuted = true;
       vid.playsInline = true;
       vid.setAttribute('playsinline', '');
       vid.setAttribute('webkit-playsinline', '');
+      vid.setAttribute('loop', '');
       vid.preload = 'auto';
 
-      wrapper.appendChild(vid);
-      lightboxContent.appendChild(wrapper);
+      lightboxContent.appendChild(vid);
 
-      // Attempt to play immediately on user tap
-      const playPromise = vid.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // If browser policy blocks sound without interaction on this element,
-          // mute and play, and show an interactive unmute badge
-          vid.muted = true;
-          vid.defaultMuted = true;
-          vid.play().then(() => {
-            showUnmuteBadge(wrapper, vid);
-          }).catch(err => {
-            console.warn('Video play error:', err);
-          });
-        });
-      }
+      vid.play().catch(err => {
+        console.log('Video autoplay caught:', err);
+      });
     } else {
       const img = document.createElement('img');
       img.className = 'lightbox__img';
@@ -450,38 +438,17 @@
     }
   }
 
-  function showUnmuteBadge(wrapper, vid) {
-    if (!vid.muted) return;
-    const badge = document.createElement('button');
-    badge.type = 'button';
-    badge.className = 'lightbox__unmute-badge';
-    badge.innerHTML = '<span>🔊</span> <span>اضغط لتشغيل الصوت</span>';
-    
-    function unmute(e) {
-      if (e) e.stopPropagation();
-      vid.muted = false;
-      vid.volume = 1.0;
-      badge.remove();
-    }
-    badge.addEventListener('click', unmute);
-    badge.addEventListener('touchend', unmute);
-    vid.addEventListener('volumechange', () => {
-      if (!vid.muted && badge.parentNode) badge.remove();
-    });
-    wrapper.appendChild(badge);
-  }
-
   function closeLightbox() {
     if (!lightbox) return;
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
     if (lightboxContent) {
-      const videos = lightboxContent.querySelectorAll('video');
-      videos.forEach(v => {
-        v.pause();
-        v.src = '';
-        v.load();
-      });
+      const vid = lightboxContent.querySelector('video');
+      if (vid) {
+        vid.pause();
+        vid.removeAttribute('src');
+        vid.load();
+      }
       lightboxContent.innerHTML = '';
     }
   }
@@ -573,35 +540,6 @@
       }
     });
   }
-
-  /* ── 10. MOBILE VIDEO PREVIEWS (IntersectionObserver) ── */
-  function initVideoPreviews() {
-    const previewVideos = document.querySelectorAll('.media-slot video, .gallery-card video');
-    previewVideos.forEach(vid => {
-      vid.muted = true;
-      vid.defaultMuted = true;
-      vid.playsInline = true;
-      vid.setAttribute('playsinline', '');
-      vid.setAttribute('webkit-playsinline', '');
-      vid.setAttribute('loop', '');
-    });
-
-    if ('IntersectionObserver' in window) {
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const vid = entry.target;
-          if (entry.isIntersecting) {
-            vid.play().catch(() => {});
-          } else {
-            vid.pause();
-          }
-        });
-      }, { threshold: 0.15 });
-
-      previewVideos.forEach(v => videoObserver.observe(v));
-    }
-  }
-  initVideoPreviews();
 
 })();
 
