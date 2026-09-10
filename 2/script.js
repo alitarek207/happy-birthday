@@ -136,9 +136,19 @@
   }
 
   if (unlockBtn) unlockBtn.addEventListener('click', checkPassword);
+  const gateForm = document.getElementById('gate-form');
+  if (gateForm) {
+    gateForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      checkPassword();
+    });
+  }
   if (passwordInput) {
     passwordInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') checkPassword();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        checkPassword();
+      }
     });
   }
 
@@ -232,7 +242,15 @@
       if (vid) {
         if (i === index) {
           vid.currentTime = 0;
-          vid.play().catch(() => {});
+          vid.muted = true;
+          vid.defaultMuted = true;
+          vid.playsInline = true;
+          vid.setAttribute('playsinline', '');
+          vid.setAttribute('webkit-playsinline', '');
+          const p = vid.play();
+          if (p !== undefined) {
+            p.catch(err => console.log('Story autoplay caught:', err));
+          }
         } else {
           vid.pause();
         }
@@ -364,24 +382,26 @@
   let currentLightboxIndex = 0;
 
   function collectLightboxMedia() {
-    const items = document.querySelectorAll('.gallery-card');
-    currentLightboxList = Array.from(items).map(card => {
-      const isVideo = card.dataset.type === 'video';
-      const media = card.querySelector(isVideo ? 'video' : 'img');
+    const items = document.querySelectorAll('.gallery-card, .media-slot');
+    currentLightboxList = Array.from(items).map(item => {
+      const isVideo = item.dataset.type === 'video' || item.querySelector('video') !== null;
+      const media = item.querySelector(isVideo ? 'video' : 'img');
+      const rawSrc = media ? (media.getAttribute('src') || media.src) : '';
       return {
         type: isVideo ? 'video' : 'image',
-        src: media ? (media.getAttribute('src') || media.src) : ''
+        src: rawSrc.split('#')[0]
       };
-    });
+    }).filter(item => item.src);
   }
   collectLightboxMedia();
 
   window.openLightbox = function (type, src) {
     if (!lightbox || !lightboxContent) return;
     collectLightboxMedia();
-    const idx = currentLightboxList.findIndex(item => item.src.includes(src) || src.includes(item.src));
+    const cleanTarget = src.split('#')[0];
+    const idx = currentLightboxList.findIndex(item => item.src.includes(cleanTarget) || cleanTarget.includes(item.src));
     currentLightboxIndex = idx >= 0 ? idx : 0;
-    renderLightboxItem(type, src);
+    renderLightboxItem(type, cleanTarget);
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
   };
@@ -389,27 +409,81 @@
   function renderLightboxItem(type, src) {
     if (!lightboxContent) return;
     lightboxContent.innerHTML = '';
+    const cleanSrc = src.split('#')[0];
+
     if (type === 'video') {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lightbox__video-wrapper';
+
       const vid = document.createElement('video');
       vid.className = 'lightbox__video';
-      vid.src = src;
+      vid.src = cleanSrc;
       vid.controls = true;
-      vid.autoplay = true;
       vid.playsInline = true;
-      lightboxContent.appendChild(vid);
+      vid.setAttribute('playsinline', '');
+      vid.setAttribute('webkit-playsinline', '');
+      vid.preload = 'auto';
+
+      wrapper.appendChild(vid);
+      lightboxContent.appendChild(wrapper);
+
+      // Attempt to play immediately on user tap
+      const playPromise = vid.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If browser policy blocks sound without interaction on this element,
+          // mute and play, and show an interactive unmute badge
+          vid.muted = true;
+          vid.defaultMuted = true;
+          vid.play().then(() => {
+            showUnmuteBadge(wrapper, vid);
+          }).catch(err => {
+            console.warn('Video play error:', err);
+          });
+        });
+      }
     } else {
       const img = document.createElement('img');
       img.className = 'lightbox__img';
-      img.src = src;
+      img.src = cleanSrc;
       lightboxContent.appendChild(img);
     }
+  }
+
+  function showUnmuteBadge(wrapper, vid) {
+    if (!vid.muted) return;
+    const badge = document.createElement('button');
+    badge.type = 'button';
+    badge.className = 'lightbox__unmute-badge';
+    badge.innerHTML = '<span>🔊</span> <span>اضغط لتشغيل الصوت</span>';
+    
+    function unmute(e) {
+      if (e) e.stopPropagation();
+      vid.muted = false;
+      vid.volume = 1.0;
+      badge.remove();
+    }
+    badge.addEventListener('click', unmute);
+    badge.addEventListener('touchend', unmute);
+    vid.addEventListener('volumechange', () => {
+      if (!vid.muted && badge.parentNode) badge.remove();
+    });
+    wrapper.appendChild(badge);
   }
 
   function closeLightbox() {
     if (!lightbox) return;
     lightbox.classList.remove('active');
     document.body.style.overflow = '';
-    if (lightboxContent) lightboxContent.innerHTML = '';
+    if (lightboxContent) {
+      const videos = lightboxContent.querySelectorAll('video');
+      videos.forEach(v => {
+        v.pause();
+        v.src = '';
+        v.load();
+      });
+      lightboxContent.innerHTML = '';
+    }
   }
 
   if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
@@ -500,4 +574,34 @@
     });
   }
 
+  /* ── 10. MOBILE VIDEO PREVIEWS (IntersectionObserver) ── */
+  function initVideoPreviews() {
+    const previewVideos = document.querySelectorAll('.media-slot video, .gallery-card video');
+    previewVideos.forEach(vid => {
+      vid.muted = true;
+      vid.defaultMuted = true;
+      vid.playsInline = true;
+      vid.setAttribute('playsinline', '');
+      vid.setAttribute('webkit-playsinline', '');
+      vid.setAttribute('loop', '');
+    });
+
+    if ('IntersectionObserver' in window) {
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const vid = entry.target;
+          if (entry.isIntersecting) {
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+        });
+      }, { threshold: 0.15 });
+
+      previewVideos.forEach(v => videoObserver.observe(v));
+    }
+  }
+  initVideoPreviews();
+
 })();
+
